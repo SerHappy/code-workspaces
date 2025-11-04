@@ -1,14 +1,21 @@
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Go Version](https://img.shields.io/badge/Go-1.21%2B-blue)
+![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-lightgrey)
+
 # cw - VSCode Workspace Launcher
 
-A fast CLI tool for opening VS Code workspaces by their relative path.
+A fast and lightweight CLI tool for opening VS Code workspaces by their relative paths.  
+Designed for developers who want to jump between projects instantly — without touching the mouse.
 
 ## Table of Contents
 
 - [What is it?](#what-is-it)
+- [Features](#features)
 - [Why use it?](#why-use-it)
 - [Installation](#installation)
   - [Prerequisites](#prerequisites)
   - [Install from source](#install-from-source)
+  - [Install via Go](#install-via-go)
   - [Uninstall](#uninstall)
 - [Setup](#setup)
 - [Shell Autocompletion](#shell-autocompletion)
@@ -28,32 +35,33 @@ A fast CLI tool for opening VS Code workspaces by their relative path.
 
 ## What is it?
 
-`cw` (code workspace) is a command-line utility that helps you quickly open VS Code workspace files without typing full paths. It scans your projects directory for `.code-workspace` files and lets you open them using just the relative directory name.
-
-Instead of:
-```bash
-code ~/Projects/my-company/backend/api-service/api.code-workspace
-```
+`cw` (short for **code workspace**) is a command-line tool that lets you open VS Code workspaces using short, relative paths — no more typing full directories or navigating folders.
 
 You can simply type:
 ```bash
 cw my-company/backend/api-service
 ```
 
+## Features
+
+- ⚡ Instant workspace switching — open any project instantly with `cw <path>`
+- 🔍 Smart recursive scanning — finds `.code-workspace` files under `~/Projects`
+- 🧠 Leaf detection — stops scanning once a workspace is found inside a directory
+- 🪄 Shell autocompletion — works with Bash, Zsh, and Fish
+- 💻 Lightweight & dependency-free — just one self-contained Go binary
+
 ## Why use it?
 
-- **Faster than VS Code extensions**: VS Code workspace picker extensions can be slow, especially with many workspaces. Searching through a long list visually takes more time than simply typing the path you need.
-- **Fast workspace switching**: Open any workspace with a short command
-- **Shell autocompletion**: Tab-complete workspace paths for even faster navigation
-- **Simple workflow**: No need to remember full paths or navigate through directories
-- **Lightweight**: Single binary with no dependencies
+- **Faster than VS Code extensions** — workspace picker extensions can lag when you have many projects. Typing is faster than scrolling.
+- **Minimal friction** — jump to any workspace from the terminal.
+- **Simple workflow** — no need to remember full paths or navigate through directories.
 
 ## Installation
 
 ### Prerequisites
 
 - Go 1.21 or higher
-- VS Code with `code` command in PATH
+- VS Code with the `code` command available in `PATH`
 
 ### Install from source
 
@@ -63,7 +71,18 @@ cd code-workspaces
 make install
 ```
 
-This will build and install the `cw` binary to `~/go/bin/`. Make sure this directory is in your `PATH`.
+This builds and installs the `cw` binary to `~/go/bin/`.
+Ensure that `~/go/bin` is in your `PATH`:
+```bash
+export PATH="$HOME/go/bin:$PATH"
+```
+
+### Install via Go
+
+You can also install directly using Go:
+```bash
+go install github.com/serhappy/code-workspaces/cmd/cw@latest
+```
 
 ### Uninstall
 
@@ -75,7 +94,7 @@ make uninstall
 
 By default, `cw` scans for workspaces under `~/Projects`. The tool recursively searches for `.code-workspace` files in this directory.
 
-### Directory structure example
+### Example directory structure
 
 ```
 ~/Projects/
@@ -89,14 +108,14 @@ By default, `cw` scans for workspaces under `~/Projects`. The tool recursively s
 │       └── api.code-workspace
 ```
 
-With this structure, you can open workspaces using:
+Usage examples:
 - `cw personal/blog`
 - `cw work/frontend`
 - `cw work/backend`
 
 ## Shell Autocompletion
 
-Enable autocompletion for faster workspace navigation.
+Enable autocompletion to quickly navigate between workspaces.
 
 ### Bash
 
@@ -119,7 +138,7 @@ Add to your `~/.config/fish/config.fish`:
 cw completion fish | source
 ```
 
-After adding the completion script, restart your shell or source the config file:
+Then reload your shell:
 ```bash
 source ~/.bashrc  # or ~/.zshrc
 ```
@@ -135,17 +154,15 @@ cw <relative-directory>
 Example:
 ```bash
 cw work/backend
+# Opens ~/Projects/work/backend/api.code-workspace in the current VS Code window
 ```
-
-This opens the workspace file found in `~/Projects/work/backend/`.
 
 ### List all available workspaces
 
 ```bash
 cw list
 ```
-
-This displays all workspace keys (relative paths) that you can use with the `cw` command.
+This displays all relative workspace paths detected by `cw`.
 
 ### Get help
 
