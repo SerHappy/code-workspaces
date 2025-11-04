@@ -38,10 +38,8 @@ func scanDir(root string, dirAbsPath string) ([]Workspace, error) {
 				return nil, err
 			}
 			return []Workspace{{
-				DirAbs:  dirAbsPath,
 				FileAbs: filepath.Join(dirAbsPath, entry.Name()),
 				RelDir:  relDir,
-				Name:    entry.Name(),
 			},
 			}, nil
 		}
