@@ -2,6 +2,30 @@
 
 A fast CLI tool for opening VS Code workspaces by their relative path.
 
+## Table of Contents
+
+- [What is it?](#what-is-it)
+- [Why use it?](#why-use-it)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Install from source](#install-from-source)
+  - [Uninstall](#uninstall)
+- [Setup](#setup)
+- [Shell Autocompletion](#shell-autocompletion)
+  - [Bash](#bash)
+  - [Zsh](#zsh)
+  - [Fish](#fish)
+- [Usage](#usage)
+  - [Open a workspace](#open-a-workspace)
+  - [List all available workspaces](#list-all-available-workspaces)
+  - [Get help](#get-help)
+- [How it works](#how-it-works)
+  - [Workspace detection logic](#workspace-detection-logic)
+  - [Ignored directories](#ignored-directories)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## What is it?
 
 `cw` (code workspace) is a command-line utility that helps you quickly open VS Code workspace files without typing full paths. It scans your projects directory for `.code-workspace` files and lets you open them using just the relative directory name.
