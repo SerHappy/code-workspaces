@@ -11,19 +11,9 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all workspaces under projects root",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		rootDir, err := cmd.Flags().GetString("root")
+		wsList, root, err := getWorkspaces(cmd)
 		if err != nil {
-			return fmt.Errorf("get root directory: %w", err)
-		}
-
-		root, err := workspaces.Root(rootDir)
-		if err != nil {
-			return fmt.Errorf("determine projects root: %w", err)
-		}
-
-		wsList, err := workspaces.Scan(root)
-		if err != nil {
-			return fmt.Errorf("scan workspaces: %w", err)
+			return err
 		}
 
 		if len(wsList) == 0 {

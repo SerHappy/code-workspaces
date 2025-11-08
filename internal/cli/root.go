@@ -18,19 +18,9 @@ var rootCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		target := args[0]
 
-		rootDir, err := cmd.Flags().GetString("root")
+		wsList, root, err := getWorkspaces(cmd)
 		if err != nil {
-			return fmt.Errorf("get root directory: %w", err)
-		}
-
-		root, err := workspaces.Root(rootDir)
-		if err != nil {
-			return fmt.Errorf("determine projects root: %w", err)
-		}
-
-		wsList, err := workspaces.Scan(root)
-		if err != nil {
-			return fmt.Errorf("scan workspaces: %w", err)
+			return err
 		}
 
 		if len(wsList) == 0 {
@@ -68,17 +58,7 @@ func init() {
 }
 
 func completeWorkspaces(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-	rootDir, err := cmd.Flags().GetString("root")
-	if err != nil {
-		return nil, cobra.ShellCompDirectiveError
-	}
-
-	root, err := workspaces.Root(rootDir)
-	if err != nil {
-		return nil, cobra.ShellCompDirectiveError
-	}
-
-	wsList, err := workspaces.Scan(root)
+	wsList, _, err := getWorkspaces(cmd)
 	if err != nil {
 		return nil, cobra.ShellCompDirectiveError
 	}
@@ -99,4 +79,19 @@ func Execute() {
 	if err != nil {
 		os.Exit(1)
 	}
+}
+
+func getWorkspaces(cmd *cobra.Command) ([]workspaces.Workspace, string, error) {
+	rootDir, err := cmd.Flags().GetString("root")
+	if err != nil {
+		return nil, "", fmt.Errorf("get root directory: %w", err)
+	}
+
+	root, err := workspaces.Root(rootDir)
+	if err != nil {
+		return nil, "", fmt.Errorf("determine projects root: %w", err)
+	}
+
+	wsList, err := workspaces.Scan(root)
+	return wsList, root, err
 }
