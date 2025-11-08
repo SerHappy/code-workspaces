@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var rootDir string
 var rootCmd = &cobra.Command{
 	Use:   "cw [relative-directory]",
 	Short: "Open VS Code workspace by relative directory name",
@@ -17,7 +18,12 @@ var rootCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		target := args[0]
 
-		root, err := workspaces.Root()
+		rootDir, err := cmd.Flags().GetString("root")
+		if err != nil {
+			return fmt.Errorf("get root directory: %w", err)
+		}
+
+		root, err := workspaces.Root(rootDir)
 		if err != nil {
 			return fmt.Errorf("determine projects root: %w", err)
 		}
@@ -58,10 +64,16 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	rootCmd.ValidArgsFunction = completeWorkspaces
+	rootCmd.PersistentFlags().StringVarP(&rootDir, "root", "r", "", "custom root directory")
 }
 
 func completeWorkspaces(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-	root, err := workspaces.Root()
+	rootDir, err := cmd.Flags().GetString("root")
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveError
+	}
+
+	root, err := workspaces.Root(rootDir)
 	if err != nil {
 		return nil, cobra.ShellCompDirectiveError
 	}

@@ -10,7 +10,11 @@ const workspaceExt = ".code-workspace"
 
 var ignoreDirs = []string{".links", "python_wrappers"}
 
-func Root() (string, error) {
+func Root(customRoot string) (string, error) {
+	if customRoot != "" {
+		return customRoot, nil
+	}
+	
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", err

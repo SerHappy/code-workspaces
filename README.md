@@ -45,7 +45,8 @@ cw my-company/backend/api-service
 ## Features
 
 - ⚡ Instant workspace switching — open any project instantly with `cw <path>`
-- 🔍 Smart recursive scanning — finds `.code-workspace` files under `~/Projects`
+- 🔍 Smart recursive scanning — finds `.code-workspace` files in your projects
+- 🎯 Custom root directory — use `--root` flag to scan any directory (default: `~/Projects`)
 - 🧠 Leaf detection — stops scanning once a workspace is found inside a directory
 - 🪄 Shell autocompletion — works with Bash, Zsh, and Fish
 - 💻 Lightweight & dependency-free — just one self-contained Go binary
@@ -92,7 +93,11 @@ make uninstall
 
 ## Setup
 
-By default, `cw` scans for workspaces under `~/Projects`. The tool recursively searches for `.code-workspace` files in this directory.
+By default, `cw` scans for workspaces under `~/Projects`. You can override this with the `--root` flag:
+
+```bash
+cw --root ~/MyProjects work/backend
+```
 
 ### Example directory structure
 
@@ -161,6 +166,9 @@ cw work/backend
 
 ```bash
 cw list
+
+# With custom root directory
+cw --root ~/MyProjects list
 ```
 This displays all relative workspace paths detected by `cw`.
 
@@ -209,7 +217,7 @@ The following directories are automatically excluded from scanning:
 
 Planned features:
 
-- [ ] Configurable root directory
+- [x] Configurable root directory
 - [ ] Custom exclude patterns
 - [ ] Workspace aliases
 - [ ] Configuration file support
