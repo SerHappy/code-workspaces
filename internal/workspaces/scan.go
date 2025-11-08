@@ -1,9 +1,11 @@
 package workspaces
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"slices"
+	"strings"
 )
 
 const workspaceExt = ".code-workspace"
@@ -11,15 +13,42 @@ const workspaceExt = ".code-workspace"
 var ignoreDirs = []string{".links", "python_wrappers"}
 
 func Root(customRoot string) (string, error) {
-	if customRoot != "" {
-		return customRoot, nil
+	if customRoot == "" {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			return "", err
+		}
+		return filepath.Join(homeDir, "Projects"), nil
 	}
-	
-	homeDir, err := os.UserHomeDir()
+
+	root := customRoot
+
+	if strings.HasPrefix(root, "~") {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			return "", fmt.Errorf("expand home directory: %w", err)
+		}
+		root = filepath.Join(homeDir, root[1:])
+	}
+
+	absRoot, err := filepath.Abs(root)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("convert to absolute path: %w", err)
 	}
-	return filepath.Join(homeDir, "Projects"), nil
+
+	info, err := os.Stat(absRoot)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return "", fmt.Errorf("directory does not exist: %s", absRoot)
+		}
+		return "", fmt.Errorf("stat directory: %w", err)
+	}
+
+	if !info.IsDir() {
+		return "", fmt.Errorf("not a directory: %s", absRoot)
+	}
+
+	return absRoot, nil
 }
 
 func Scan(root string) ([]Workspace, error) {
